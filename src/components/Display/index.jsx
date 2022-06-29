@@ -4,7 +4,7 @@ function Display() {
   const [userGuess, setUserGuess] = useState("text");
   const [guessHistory, setGuessHistory] = useState([]);
   const [isValidWord, setIsValidWord] = useState(false);
-
+  const [guessNum, setGuessNum] = useState(6);
   //   fetching and setting the target word of the day
   useEffect(() => {
     fetch("https://api.frontendeval.com/fake/word")
@@ -37,11 +37,17 @@ function Display() {
     setIsValidWord(false);
   };
 
-  //  if the user's guess is a valid word, add it to a history
+  //  if the user's guess is a valid word, add it to a history and decrease gusses remaining
   useEffect(() => {
     if (isValidWord) {
       setGuessHistory((curr) => {
         return [...curr, userGuess];
+      });
+      setGuessNum((curr) => {
+        let clone = curr;
+        if (clone > 0) {
+          return curr - 1;
+        }
       });
     }
   }, [isValidWord, userGuess]);
@@ -50,6 +56,7 @@ function Display() {
     <div>
       <h2>Wuzzle</h2>
       <h3>Target Word: {targetWord}</h3>
+      <h3>You have {guessNum} guesses remaining</h3>
       <ul>
         {guessHistory
           ? guessHistory.map((x, i) => {
@@ -64,6 +71,7 @@ function Display() {
           maxLength="5"
           required
           onChange={onChange}
+          disabled={guessNum === 0} // disable the input when user runs out of guesses
         ></input>
       </form>
       <div>{isValidWord ? "Valid" : "Not Valid"} Word</div>
