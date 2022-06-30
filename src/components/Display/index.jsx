@@ -1,36 +1,36 @@
 import { useEffect, useState } from "react";
 function Display() {
-  const [targetWord, setTargetWord] = useState("");
+  const [correctWord, setCorrectWord] = useState("");
   const [userGuess, setUserGuess] = useState("text");
   const [guessHistory, setGuessHistory] = useState([]);
   const [isValidWord, setIsValidWord] = useState(false);
-  //   fetching and setting the target word of the day
+  //   fetching and setting the correct word of the day
   useEffect(() => {
-    // fetch("https://api.frontendeval.com/fake/word")
-    //   .then((res) => res.text())
-    //   .then((data) => setTargetWord(data));
-    setTargetWord("sleep");
+    fetch("https://api.frontendeval.com/fake/word")
+      .then((res) => res.text())
+      .then((data) => setCorrectWord(data));
     setUserGuess("");
   }, []);
 
-  // on submit, check to see if the user input is a valid word
-  const checkValidity = (e) => {
-    e.preventDefault();
-    fetch("https://api.frontendeval.com/fake/word/valid", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        word: userGuess,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsValidWord(data);
-      });
-  };
+  // if the user's input is 5 letters, check to see if it's a valid word
+  useEffect(() => {
+    if (userGuess.length === 5) {
+      fetch("https://api.frontendeval.com/fake/word/valid", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          word: userGuess,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setIsValidWord(data);
+        });
+    }
+  }, [userGuess]);
 
   //  handle user input and automatically set
   const onChange = (e) => {
@@ -38,16 +38,8 @@ function Display() {
     setIsValidWord(false);
   };
 
-  //  if the user's guess is a valid word, add it to a history
-  useEffect(() => {
-    if (isValidWord) {
-      setGuessHistory((curr) => {
-        return [...curr, userGuess];
-      });
-    }
-  }, [isValidWord, userGuess]);
-
-  const targetObj = targetWord.split("").reduce((acc, curr, index) => {
+  // create an object to keep track of letters and corresponding indexes of the correct word
+  const correctObj = correctWord.split("").reduce((acc, curr, index) => {
     const newAcc = { ...acc };
     // if newAcc[curr] is undefined, set it to empty array
     if (!newAcc[curr]) {
@@ -59,32 +51,47 @@ function Display() {
   }, {});
 
   // check user guess against word of the day
-  // useEffect(() => {
-  //   if (isValidWord) {
-  //     if (targetWord === userGuess) {
-  //       console.log("MATCH");
-  //     }
-  //     for (let j = 0; j < 5; j++) {
-  //       let guessLetter = userGuess[j];
-  //       if (targetObj.hasOwnProperty(guessLetter)) {
-  //         console.log(guessLetter, targetObj[userGuess[j]]);
-  // if (
-  //   targetWord.indexOf(userGuess[j]) === userGuess.indexOf(userGuess[j])
-  // ) {
-  //   console.log(userGuess[j] + " in right spot");
-  // } else {
-  //   console.log(userGuess[j] + ` in wrong spot`);
-  // }
-  // findAllIndexOf(targetWord, userGuess[j]);
-  //       }
-  //     }
-  //   }
-  // }, [userGuess, targetWord, isValidWord]);
+  const checkGuess = (correctWord, userGuess, correctObj) => {
+    if (isValidWord) {
+      // if the user's guess is correct, skip all other checks
+      if (correctWord === userGuess) {
+        console.log("MATCH");
+        return;
+      }
+      for (let j = 0; j < 5; j++) {
+        let guessLetter = userGuess[j];
+        if (correctObj.hasOwnProperty(guessLetter)) {
+          let indexGL = userGuess.indexOf(guessLetter);
+          let correctArr = correctObj[guessLetter];
+          if (correctArr.includes(indexGL)) {
+            console.log("correct letter, correct spot", guessLetter);
+          } else {
+            console.log("correct letter, WRONG spot", guessLetter);
+          }
+        } else {
+          console.log("WRONG letter", guessLetter);
+        }
+      }
+    }
+  };
+
+  // on form submit, if it's a valid word then check guess to correct word
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (isValidWord) {
+      setGuessHistory((curr) => {
+        return [...curr, userGuess];
+      });
+      checkGuess(correctWord, userGuess, correctObj);
+    } else {
+      console.log("not a word...");
+    }
+  };
 
   return (
     <div>
       <h2>Wuzzle</h2>
-      <h3>Target Word: {targetWord}</h3>
+      <h3>Correct Word: {correctWord}</h3>
       <h3>You have {6 - guessHistory.length} guesses remaining</h3>
       <ul>
         {guessHistory
@@ -93,7 +100,7 @@ function Display() {
             })
           : null}
       </ul>
-      <form onSubmit={checkValidity}>
+      <form onSubmit={onSubmit}>
         <input
           type="text"
           minLength="5"
