@@ -4,6 +4,14 @@ function Display() {
   const [userGuess, setUserGuess] = useState("text");
   const [guessHistory, setGuessHistory] = useState([]);
   const [isValidWord, setIsValidWord] = useState(false);
+  const [guessStatus, setGuessStatus] = useState({
+    0: "",
+    1: "",
+    2: "",
+    3: "",
+    4: "",
+  });
+
   //   fetching and setting the correct word of the day
   useEffect(() => {
     fetch("https://api.frontendeval.com/fake/word")
@@ -64,17 +72,31 @@ function Display() {
           let indexGL = userGuess.indexOf(guessLetter);
           let correctArr = correctObj[guessLetter];
           if (correctArr.includes(indexGL)) {
-            console.log("correct letter, correct spot", guessLetter);
+            setGuessStatus((curr) => {
+              let cloneObj = curr;
+              curr[j] = "correct letter, correct spot";
+              return cloneObj;
+            });
+            console.log("correct letter, correct spot", guessLetter, j);
           } else {
-            console.log("correct letter, WRONG spot", guessLetter);
+            setGuessStatus((curr) => {
+              let cloneObj = curr;
+              curr[j] = "correct letter, WRONG spot";
+              return cloneObj;
+            });
+            console.log("correct letter, WRONG spot", guessLetter, j);
           }
         } else {
-          console.log("WRONG letter", guessLetter);
+          setGuessStatus((curr) => {
+            let cloneObj = curr;
+            curr[j] = "WRONG letter";
+            return cloneObj;
+          });
+          console.log("WRONG letter", guessLetter, j);
         }
       }
     }
   };
-
   // on form submit, if it's a valid word then check guess to correct word
   const onSubmit = (e) => {
     e.preventDefault();
