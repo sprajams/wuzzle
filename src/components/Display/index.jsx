@@ -4,12 +4,13 @@ function Display() {
   const [userGuess, setUserGuess] = useState("text");
   const [guessHistory, setGuessHistory] = useState([]);
   const [isValidWord, setIsValidWord] = useState(false);
-  const [guessNum, setGuessNum] = useState(6);
   //   fetching and setting the target word of the day
   useEffect(() => {
-    fetch("https://api.frontendeval.com/fake/word")
-      .then((res) => res.text())
-      .then((data) => setTargetWord(data));
+    // fetch("https://api.frontendeval.com/fake/word")
+    //   .then((res) => res.text())
+    //   .then((data) => setTargetWord(data));
+    setTargetWord("sleep");
+    setUserGuess("");
   }, []);
 
   // on submit, check to see if the user input is a valid word
@@ -37,26 +38,54 @@ function Display() {
     setIsValidWord(false);
   };
 
-  //  if the user's guess is a valid word, add it to a history and decrease gusses remaining
+  //  if the user's guess is a valid word, add it to a history
   useEffect(() => {
     if (isValidWord) {
       setGuessHistory((curr) => {
         return [...curr, userGuess];
       });
-      setGuessNum((curr) => {
-        let clone = curr;
-        if (clone > 0) {
-          return curr - 1;
-        }
-      });
     }
   }, [isValidWord, userGuess]);
+
+  const targetObj = targetWord.split("").reduce((acc, curr, index) => {
+    const newAcc = { ...acc };
+    // if newAcc[curr] is undefined, set it to empty array
+    if (!newAcc[curr]) {
+      newAcc[curr] = [];
+    }
+    // push current index to current key
+    newAcc[curr].push(index);
+    return newAcc;
+  }, {});
+
+  // check user guess against word of the day
+  // useEffect(() => {
+  //   if (isValidWord) {
+  //     if (targetWord === userGuess) {
+  //       console.log("MATCH");
+  //     }
+  //     for (let j = 0; j < 5; j++) {
+  //       let guessLetter = userGuess[j];
+  //       if (targetObj.hasOwnProperty(guessLetter)) {
+  //         console.log(guessLetter, targetObj[userGuess[j]]);
+  // if (
+  //   targetWord.indexOf(userGuess[j]) === userGuess.indexOf(userGuess[j])
+  // ) {
+  //   console.log(userGuess[j] + " in right spot");
+  // } else {
+  //   console.log(userGuess[j] + ` in wrong spot`);
+  // }
+  // findAllIndexOf(targetWord, userGuess[j]);
+  //       }
+  //     }
+  //   }
+  // }, [userGuess, targetWord, isValidWord]);
 
   return (
     <div>
       <h2>Wuzzle</h2>
       <h3>Target Word: {targetWord}</h3>
-      <h3>You have {guessNum} guesses remaining</h3>
+      <h3>You have {6 - guessHistory.length} guesses remaining</h3>
       <ul>
         {guessHistory
           ? guessHistory.map((x, i) => {
@@ -71,7 +100,7 @@ function Display() {
           maxLength="5"
           required
           onChange={onChange}
-          disabled={guessNum === 0} // disable the input when user runs out of guesses
+          disabled={guessHistory.length === 6} // disable the input when user runs out of guesses
         ></input>
       </form>
       <div>{isValidWord ? "Valid" : "Not Valid"} Word</div>
