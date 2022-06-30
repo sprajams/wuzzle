@@ -1,0 +1,22 @@
+.outer {
+  padding: 0;
+}
+.letterWrap {
+  list-style: none;
+}
+.letter {
+  border: 2px solid black;
+  display: inline-block;
+  margin: 5px;
+  padding: 5px;
+  width: 50px;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.green {
+  background: green;
+}
+.orange {
+  background: orange;
+}
