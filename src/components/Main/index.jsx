@@ -1,5 +1,6 @@
 import History from "../History";
 import { useEffect, useState } from "react";
+import styles from "./styles.module.scss";
 function Main() {
   const [correctWord, setCorrectWord] = useState("");
   const [userGuess, setUserGuess] = useState("text");
@@ -59,16 +60,9 @@ function Main() {
   }, [guessHistory, correctWord]);
 
   return (
-    <div>
+    <div className={styles.outer}>
       <h2>Wuzzle</h2>
-      <h3>Correct Word: {correctWord}</h3>
       <h3>You have {6 - guessHistory.length} guesses remaining</h3>
-
-      <History
-        guessHistory={guessHistory}
-        correctWord={correctWord}
-        setMatch={setMatch}
-      />
 
       {match ? (
         <div>WINNER!</div>
@@ -84,6 +78,12 @@ function Main() {
           ></input>
         </form>
       )}
+
+      <History
+        guessHistory={guessHistory}
+        correctWord={correctWord}
+        setMatch={setMatch}
+      />
     </div>
   );
 }

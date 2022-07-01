@@ -1,22 +1,38 @@
 .outer {
+  display: flex;
+  margin: 20px auto;
+}
+.list {
   padding: 0;
 }
-.letterWrap {
+.word {
   list-style: none;
+  display: flex;
 }
 .letter {
-  border: 2px solid black;
-  display: inline-block;
   margin: 5px;
   padding: 5px;
   width: 50px;
+  height: 50px;
   text-align: center;
   font-size: 1.5em;
+  background-color: rgb(229, 229, 229);
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px rgb(194, 194, 194);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (min-width: 768px) {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 .green {
-  background: green;
+  background: rgb(140, 232, 140);
+  box-shadow: 3px 4px 6px rgba(14, 110, 14, 0.6);
 }
 .orange {
-  background: orange;
+  background: rgb(255, 211, 129);
+  box-shadow: 3px 4px 6px rgba(195, 137, 29, 0.6);
 }

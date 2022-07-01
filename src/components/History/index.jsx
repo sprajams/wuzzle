@@ -2,8 +2,8 @@ import clsx from "clsx";
 import styles from "./styles.module.scss";
 function History({ guessHistory, correctWord }) {
   return (
-    <div>
-      <ul className={styles.outer}>
+    <div className={styles.outer}>
+      <ul className={styles.list}>
         {guessHistory
           ? guessHistory.map((x, i) => {
               const guessArr = x.split("");
@@ -30,7 +30,7 @@ function History({ guessHistory, correctWord }) {
                 }
               }
               return (
-                <li className={styles.letterWrap} key={i}>
+                <li className={styles.word} key={i}>
                   {guessArr.map((letter, i) => {
                     return (
                       <span
@@ -41,7 +41,7 @@ function History({ guessHistory, correctWord }) {
                         )}
                         key={`letter-${i}`}
                       >
-                        {letter}
+                        {letter.toUpperCase()}
                       </span>
                     );
                   })}
