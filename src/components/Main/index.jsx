@@ -14,8 +14,11 @@ function Main() {
     setMatch(false);
   }, []);
 
+  //  TODO: check if this is the best way...rerenders twice
   const onChange = (e) => {
-    setUserGuess(e.target.value);
+    if (e.target.value.length === 5) {
+      setUserGuess(e.target.value);
+    }
   };
 
   // on form submit, if it's a valid word then check guess to correct word
@@ -61,7 +64,11 @@ function Main() {
       <h3>Correct Word: {correctWord}</h3>
       <h3>You have {6 - guessHistory.length} guesses remaining</h3>
 
-      <History guessHistory={guessHistory} correctWord={correctWord} />
+      <History
+        guessHistory={guessHistory}
+        correctWord={correctWord}
+        setMatch={setMatch}
+      />
 
       {match ? (
         <div>WINNER!</div>
