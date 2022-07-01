@@ -1,6 +1,30 @@
 .outer {
-  margin: 20px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.titleWrap {
+  width: 300px;
+  @media (min-width: 768px) {
+    width: 350px;
+  }
+}
+.title {
+  text-align: center;
+}
+.input {
+  margin: 20px auto 0;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  font-size: 1.5em;
+  border: none;
+  border: 2px solid rgb(186, 186, 186);
+  border-radius: 2px;
+}
+.win {
+  font-size: 1.5em;
+  text-align: center;
 }

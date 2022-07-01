@@ -17,9 +17,7 @@ function Main() {
 
   //  TODO: check if this is the best way...rerenders twice
   const onChange = (e) => {
-    if (e.target.value.length === 5) {
-      setUserGuess(e.target.value);
-    }
+    setUserGuess(e.target.value);
   };
 
   // on form submit, if it's a valid word then check guess to correct word
@@ -43,6 +41,7 @@ function Main() {
     });
 
     if (isValid) {
+      setUserGuess("");
       setGuessHistory((curr) => {
         return [...curr, userGuess];
       });
@@ -61,24 +60,25 @@ function Main() {
 
   return (
     <div className={styles.outer}>
-      <h2>Wuzzle</h2>
-      <h3>You have {6 - guessHistory.length} guesses remaining</h3>
-
-      {match ? (
-        <div>WINNER!</div>
-      ) : (
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            minLength="5"
-            maxLength="5"
-            required
-            onChange={onChange}
-            disabled={guessHistory.length === 6} // disable the input when user runs out of guesses or if guess is correct
-          ></input>
-        </form>
-      )}
-
+      <div className={styles.titleWrap}>
+        <h2 className={styles.title}>? ? ? ? ?</h2>
+        {match ? (
+          <div className={styles.win}>WINNER!</div>
+        ) : (
+          <form onSubmit={onSubmit}>
+            <input
+              type="text"
+              minLength="5"
+              maxLength="5"
+              required
+              className={styles.input}
+              onChange={onChange}
+              value={userGuess}
+              disabled={guessHistory.length === 6} // disable the input when user runs out of guesses or if guess is correct
+            ></input>
+          </form>
+        )}
+      </div>
       <History
         guessHistory={guessHistory}
         correctWord={correctWord}

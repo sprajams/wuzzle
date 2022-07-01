@@ -1,11 +1,19 @@
 import clsx from "clsx";
 import styles from "./styles.module.scss";
 function History({ guessHistory, correctWord }) {
+  // create array with empty strings to set up initial game space for 6 guesses
+  const paddedArray = new Array(6).fill("     ");
+  // once the user makes a valid guess, push that guesses onto the paddedArray
+  if (guessHistory?.length) {
+    guessHistory.forEach((guess, i) => {
+      paddedArray[i] = guess;
+    });
+  }
   return (
     <div className={styles.outer}>
       <ul className={styles.list}>
-        {guessHistory
-          ? guessHistory.map((x, i) => {
+        {paddedArray
+          ? paddedArray.map((x, i) => {
               const guessArr = x.split("");
               const correctArr = correctWord.split("");
 
