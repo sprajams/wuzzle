@@ -43,7 +43,7 @@ function Main() {
     if (isValid) {
       setUserGuess("");
       setGuessHistory((curr) => {
-        return [...curr, userGuess];
+        return [...curr, userGuess.toLowerCase()];
       });
     } else {
       console.log("not a word...");
@@ -73,7 +73,7 @@ function Main() {
               required
               className={styles.input}
               onChange={onChange}
-              value={userGuess}
+              value={userGuess.toUpperCase()}
               disabled={guessHistory.length === 6} // disable the input when user runs out of guesses or if guess is correct
             ></input>
           </form>
